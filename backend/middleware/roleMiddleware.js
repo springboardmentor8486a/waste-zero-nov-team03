@@ -1,7 +1,16 @@
-module.exports = (role) => {
+// Usage: roleMiddleware('NGO') or roleMiddleware('VOLUNTEER', 'NGO')
+const roleMiddleware = (...allowedRoles) => {
   return (req, res, next) => {
-    if (req.user.role !== role)
-      return res.status(403).json({ message: "Forbidden" });
+    if (!req.user) {
+      return res.status(401).json({ message: 'Not authenticated' });
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ message: 'Forbidden: insufficient role' });
+    }
+
     next();
   };
 };
+
+module.exports = roleMiddleware;

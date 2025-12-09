@@ -1,20 +1,35 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-module.exports = (req, res, next) => {
-  const header = req.headers.authorization;
+const authMiddleware = async (req, res, next) => {
+  let token;
 
-  if (!header)
-    return res.status(401).json({ message: "No authorization header" });
+  // Expecting: Authorization: Bearer <token>
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
 
-  const token = header.split(" ")[1];
-  if (!token)
-    return res.status(401).json({ message: "No token provided" });
+  if (!token) {
+    return res.status(401).json({ message: 'Not authorized, no token' });
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+
+    const user = await User.findById(decoded.id).select('-password');
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+
+    req.user = user;
     next();
   } catch (err) {
-    res.status(401).json({ message: "Invalid token" });
+    console.error(err);
+    return res.status(401).json({ message: 'Not authorized, token failed' });
   }
 };
+
+module.exports = authMiddleware;
