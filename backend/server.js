@@ -43,6 +43,8 @@ app.use('/api/auth', authLimiter);
 // routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/opportunities', require('./routes/opportunityRoutes'));
+
 
 // health check
 app.get('/', (req, res) => {
