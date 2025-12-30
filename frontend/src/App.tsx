@@ -16,6 +16,9 @@ import DashboardRedirect from "@/pages/dashboard/DashboardRedirect";
 import VolunteerDashboard from "@/pages/dashboard/VolunteerDashboard";
 import NgoDashboard from "@/pages/dashboard/NgoDashboard";
 import MyProfilePage from "@/pages/profile/MyProfilePage";
+import OpportunitiesPage from "@/pages/dashboard/OpportunitiesPage";
+import CreateOpportunity from "@/pages/dashboard/CreateOpportunity";
+import EditOpportunity from "@/pages/dashboard/EditOpportunity";
 
 const queryClient = new QueryClient();
 
@@ -52,7 +55,7 @@ export default function App() {
                 }
               >
                 <Route index element={<VolunteerDashboard />} />
-                <Route path="opportunities" element={<VolunteerDashboard />} />
+                <Route path="opportunities" element={<OpportunitiesPage />} />
                 <Route path="applications" element={<VolunteerDashboard />} />
                 <Route path="messages" element={<VolunteerDashboard />} />
                 <Route path="schedule" element={<VolunteerDashboard />} />
@@ -68,7 +71,9 @@ export default function App() {
                 }
               >
                 <Route index element={<NgoDashboard />} />
-                <Route path="opportunities" element={<NgoDashboard />} />
+                <Route path="opportunities" element={<OpportunitiesPage />} />
+                <Route path="opportunities/new" element={<CreateOpportunity />} />
+                <Route path="opportunities/:id/edit" element={<EditOpportunity />} />
                 <Route path="volunteers" element={<NgoDashboard />} />
                 <Route path="messages" element={<NgoDashboard />} />
                 <Route path="schedule" element={<NgoDashboard />} />
