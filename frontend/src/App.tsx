@@ -72,25 +72,29 @@ const App = () => (
               <Route path="settings" element={<VolunteerDashboard />} />
             </Route>
 
-            {/* ================= NGO DASHBOARD ================= */}
-            <Route
-              path="/dashboard/ngo"
-              element={
-                <ProtectedRoute allowedRoles={["NGO"]}>
-                  <DashboardLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<NgoDashboard />} />
-              <Route path="opportunities" element={<OpportunitiesPage />} />
-              <Route path="opportunities/new" element={<CreateOpportunity />} />
-              <Route path="opportunities/:id/edit" element={<EditOpportunity />} />
-              <Route path="volunteers" element={<NgoDashboard />} />
-              <Route path="messages" element={<NgoDashboard />} />
-              <Route path="schedule" element={<NgoDashboard />} />
-              <Route path="profile" element={<ProfilePage />} />
-              <Route path="settings" element={<NgoDashboard />} />
-            </Route>
+           {/* ================= NGO DASHBOARD ================= */}
+<Route
+  path="/dashboard/ngo"
+  element={
+    <ProtectedRoute allowedRoles={["NGO"]}>
+      <DashboardLayout />
+    </ProtectedRoute>
+  }
+>
+  <Route index element={<NgoDashboard />} />
+  <Route path="opportunities" element={<OpportunitiesPage />} />
+  <Route path="opportunities/new" element={<CreateOpportunity />} />
+  <Route path="opportunities/:id/edit" element={<EditOpportunity />} />
+  <Route path="volunteers" element={<NgoDashboard />} />
+
+  {/* ✅ FIXED NGO MESSAGES */}
+  <Route path="messages" element={<Messages />} />
+  <Route path="messages/:matchId" element={<Chat />} />
+
+  <Route path="schedule" element={<NgoDashboard />} />
+  <Route path="profile" element={<ProfilePage />} />
+  <Route path="settings" element={<NgoDashboard />} />
+</Route>
 
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
