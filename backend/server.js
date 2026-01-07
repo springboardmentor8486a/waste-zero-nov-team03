@@ -11,6 +11,7 @@ connectDB();
 
 const app = express();
 
+
 // basic security
 app.use(helmet());
 app.disable('x-powered-by');
@@ -23,10 +24,26 @@ if (process.env.NODE_ENV === 'development') {
 // body parser
 app.use(express.json());
 
+<<<<<<< HEAD
+// Routes
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/opportunities", require("./routes/opportunityRoutes"));
+=======
 // CORS for frontend
+// Allow typical frontend ports (3000, 8080, 5173 for Vite)
+const allowedOrigins = [
+  process.env.CLIENT_URL, 
+  'http://localhost:3000', 
+  'http://localhost:8080', 
+  'http://localhost:5173',
+  'http://localhost:8081'
+].filter(Boolean);
+>>>>>>> recover-lost-c
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: allowedOrigins,
     credentials: true
   })
 );
@@ -72,8 +89,9 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
+    credentials: true
   },
 });
 const socketHandler = require("./socket/socket");
