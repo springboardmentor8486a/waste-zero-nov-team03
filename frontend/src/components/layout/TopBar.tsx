@@ -1,8 +1,11 @@
+import { useEffect, useState } from 'react';
 import { Bell, LogOut, Menu } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Pill } from '@/components/ui/Pill';
+import { io } from "socket.io-client";
+import { toast } from 'sonner';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +20,33 @@ interface TopBarProps {
 
 export function TopBar({ onMenuClick }: TopBarProps) {
   const { user, logout } = useAuth();
+  const [hasNotification, setHasNotification] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const socket = io("http://localhost:2000", {
+      auth: { token },
+    });
+
+    socket.on("newMessage", (msg: any) => {
+      // Don't show notification if we are the sender (optional check)
+      if (msg.senderId !== user?.id) {
+          setHasNotification(true);
+          toast("New message received", {
+            action: {
+              label: "View",
+              onClick: () => window.location.href = "/dashboard/volunteer/messages"
+            },
+          });
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [user]);
 
   const initials = user?.name
     ?.split(' ')
@@ -44,9 +74,11 @@ export function TopBar({ onMenuClick }: TopBarProps) {
       </div>
 
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
+        <Button variant="ghost" size="icon" className="relative" aria-label="Notifications" onClick={() => setHasNotification(false)}>
           <Bell className="h-5 w-5" />
-          <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive" />
+          {hasNotification && (
+              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive" />
+          )}
         </Button>
 
         <DropdownMenu>

@@ -15,6 +15,11 @@ const messageSchema = new mongoose.Schema(
     content: {
       type: String,
       required: true
+    },
+    deletedFor: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+      default: []
     }
   },
   { timestamps: true }
